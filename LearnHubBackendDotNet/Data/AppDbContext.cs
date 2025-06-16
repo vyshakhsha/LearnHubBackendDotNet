@@ -11,5 +11,7 @@ namespace LearnHubBackendDotNet.Data
 
         public DbSet<TokenBlacklist> TokenBlacklists { get; set; }
 
+        public DbSet<Course> Courses { get; set; }
+
     }
 }
