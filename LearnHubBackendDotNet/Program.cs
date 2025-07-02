@@ -1,11 +1,12 @@
 using LearnHubBackendDotNet.Data;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using LearnHubBackendDotNet.Helpers;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.IdentityModel.Tokens;
+using Serilog;
 using System.IdentityModel.Tokens.Jwt;
+using System.Text;
 
 namespace LearnHubBackendDotNet
 {
@@ -82,6 +83,13 @@ namespace LearnHubBackendDotNet
             builder.Services.AddScoped<JwtService>();
 
 
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.File("Logs/LearnHub-log.txt", rollingInterval: RollingInterval.Day)
+                .Enrich.FromLogContext()
+                .CreateLogger();
+
+            builder.Host.UseSerilog();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -90,6 +98,8 @@ namespace LearnHubBackendDotNet
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseMiddleware<ExceptionMiddleware>();
 
             app.UseHttpsRedirection();
 

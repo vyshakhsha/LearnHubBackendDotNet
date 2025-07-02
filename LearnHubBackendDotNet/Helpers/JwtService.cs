@@ -16,13 +16,14 @@ namespace LearnHubBackendDotNet.Helpers
             _issuer = configuration["Jwt:Issuer"]!;
         }
 
-        public string GenerateToken(int userId, string email)
+        public string GenerateToken(int userId, string email,string userType)
         {
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, email),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.Role, userType)
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secret));

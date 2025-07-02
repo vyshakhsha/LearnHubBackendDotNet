@@ -136,7 +136,7 @@ namespace LearnHubBackendDotNet.Controllers
                 return Unauthorized("Invalid email or password.");
             }
 
-            var token = _jwtService.GenerateToken(user.Id, user.Email);
+            var token = _jwtService.GenerateToken(user.Id, user.Email,user.usertype);
 
             return Ok(new
             {

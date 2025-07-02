@@ -18,7 +18,6 @@ namespace LearnHubBackendDotNet.Controllers
         }
 
         [HttpPost("logout")]
-        [Authorize]
         public async Task<IActionResult> Logout()
         {
             try

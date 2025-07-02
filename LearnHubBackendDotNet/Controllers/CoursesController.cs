@@ -1,13 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using LearnHubBackendDotNet.Data;
+using LearnHubBackendDotNet.DTO;
+using LearnHubBackendDotNet.Exceptions;
+using LearnHubBackendDotNet.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using LearnHubBackendDotNet.Data;
-using LearnHubBackendDotNet.Models;
-using LearnHubBackendDotNet.DTO;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace LearnHubBackendDotNet.Controllers
 {
@@ -16,16 +18,21 @@ namespace LearnHubBackendDotNet.Controllers
     public class CoursesController : ControllerBase
     {
         private readonly AppDbContext _context;
+        private readonly ILogger<CoursesController> _logger;
 
-        public CoursesController(AppDbContext context)
+        public CoursesController(AppDbContext context, ILogger<CoursesController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // GET: api/Courses
+        
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CourseDetailsDto>>> GetCourses()
         {
+
+          _logger.LogInformation("Fetching all courses from db");
           if (_context.Courses == null)
           {
               return NotFound();
@@ -57,7 +64,6 @@ namespace LearnHubBackendDotNet.Controllers
             return await _context.Courses.Where(C=>C.category==Category).
             Select(C => new CourseDetailsDto
             {
-
                 id = C.Id,
                 AuthorEmail = C.Email,
                 author = C.author,

@@ -13,5 +13,7 @@ namespace LearnHubBackendDotNet.Data
 
         public DbSet<Course> Courses { get; set; }
 
+        public DbSet<Cart> CartItems { get; set; }
+
     }
 }
