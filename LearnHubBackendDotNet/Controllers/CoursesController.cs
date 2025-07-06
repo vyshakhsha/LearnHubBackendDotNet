@@ -34,7 +34,7 @@ namespace LearnHubBackendDotNet.Controllers
         public async Task<ActionResult<IEnumerable<CourseDetailsDto>>> GetCourses()
         {
 
-            _logger.LogInformation("Fetching all courses from db");
+            //_logger.LogInformation("Fetching all courses from db");
             if (_context.Courses == null)
             {
                 return NotFound();
