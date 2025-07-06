@@ -1,6 +1,8 @@
 using LearnHubBackendDotNet.Data;
 using LearnHubBackendDotNet.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
@@ -22,6 +24,7 @@ namespace LearnHubBackendDotNet
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.ConfigureOptions<ConfigureSwaggerOptions>();
 
             // Add EF Core
             builder.Services.AddDbContext<AppDbContext>(options =>
@@ -80,6 +83,20 @@ namespace LearnHubBackendDotNet
                     });
             });
 
+            builder.Services.AddApiVersioning(options =>
+            {
+                options.AssumeDefaultVersionWhenUnspecified = true;
+                options.DefaultApiVersion = new ApiVersion(1, 0);
+                options.ReportApiVersions = true;
+            });
+
+            builder.Services.AddVersionedApiExplorer(options =>
+            {
+                options.GroupNameFormat = "'v'VVV"; // Will be like: "v1", "v2"
+                options.SubstituteApiVersionInUrl = true;
+            });
+
+
             builder.Services.AddScoped<JwtService>();
 
 
@@ -95,9 +112,19 @@ namespace LearnHubBackendDotNet
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
+                var apiVersionProvider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
+
                 app.UseSwagger();
-                app.UseSwaggerUI();
+
+                app.UseSwaggerUI(options =>
+                {
+                    foreach (var desc in apiVersionProvider.ApiVersionDescriptions)
+                    {
+                        options.SwaggerEndpoint($"/swagger/{desc.GroupName}/swagger.json", desc.GroupName.ToUpperInvariant());
+                    }
+                });
             }
+
 
             app.UseMiddleware<ExceptionMiddleware>();
 

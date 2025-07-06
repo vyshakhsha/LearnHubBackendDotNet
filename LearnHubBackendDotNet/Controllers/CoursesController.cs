@@ -13,8 +13,11 @@ using System.Threading.Tasks;
 
 namespace LearnHubBackendDotNet.Controllers
 {
+    //[Route("api/v{version:apiVersion}/[controller]")]
     [Route("api/[controller]")]
     [ApiController]
+    //[ApiVersion("1.0")]
+    //[ApiVersion("2.0")]
     public class CoursesController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -26,19 +29,18 @@ namespace LearnHubBackendDotNet.Controllers
             _logger = logger;
         }
 
-        // GET: api/Courses
-        
-        [HttpGet]
+        //GET: api/Courses
+       [HttpGet]
         public async Task<ActionResult<IEnumerable<CourseDetailsDto>>> GetCourses()
         {
 
-          _logger.LogInformation("Fetching all courses from db");
-          if (_context.Courses == null)
-          {
-              return NotFound();
+            _logger.LogInformation("Fetching all courses from db");
+            if (_context.Courses == null)
+            {
+                return NotFound();
 
-          }
-            return await _context.Courses.Select(C=>new CourseDetailsDto
+            }
+            return await _context.Courses.Select(C => new CourseDetailsDto
             {
                 id = C.Id,
                 AuthorEmail = C.Email,
@@ -51,6 +53,53 @@ namespace LearnHubBackendDotNet.Controllers
                 students = C.students
             }).ToListAsync();
         }
+        #region API Versioning
+
+        //[HttpGet]
+        //[MapToApiVersion("1.0")]
+        //public async Task<ActionResult<IEnumerable<CourseDetailsDto>>> GetCoursesV1()
+        //{
+
+        //  _logger.LogInformation("Fetching all courses from db");
+        //  if (_context.Courses == null)
+        //  {
+        //      return NotFound();
+
+        //  }
+        //    return await _context.Courses.Select(C=>new CourseDetailsDto
+        //    {
+        //        id = C.Id,
+        //        AuthorEmail = C.Email,
+        //        author = C.author,
+        //        category = C.category,
+        //        image = C.image,
+        //        courseName = C.name,
+        //        price = C.price,
+        //        rating = C.rating,
+        //        students = C.students
+        //    }).ToListAsync();
+        //}
+
+        //[HttpGet]
+        //[MapToApiVersion("2.0")]
+        //public async Task<ActionResult<IEnumerable<CourseDetailsDto>>> GetCoursesV2()
+        //{
+
+        //    _logger.LogInformation("Fetching all courses from db");
+        //    if (_context.Courses == null)
+        //    {
+        //        return NotFound();
+
+        //    }
+        //    return await _context.Courses.Select(C => new CourseDetailsDto
+        //    {
+        //        id = C.Id,
+        //        AuthorEmail = C.Email,
+        //        author = C.author,
+        //        category = "API Versioning",
+        //    }).ToListAsync();
+        //} 
+        #endregion
 
         // GET: api/Courses/Category
         [HttpGet("Category")]
