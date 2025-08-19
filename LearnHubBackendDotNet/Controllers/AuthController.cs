@@ -6,8 +6,9 @@ using System.IdentityModel.Tokens.Jwt;
 
 namespace LearnHubBackendDotNet.Controllers
 {
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]
     public class AuthController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -18,6 +19,7 @@ namespace LearnHubBackendDotNet.Controllers
         }
 
         [HttpPost("logout")]
+        [MapToApiVersion("1.0")]
         public async Task<IActionResult> Logout()
         {
             try

@@ -13,11 +13,9 @@ using System.Threading.Tasks;
 
 namespace LearnHubBackendDotNet.Controllers
 {
-    //[Route("api/v{version:apiVersion}/[controller]")]
-    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
-    //[ApiVersion("1.0")]
-    //[ApiVersion("2.0")]
+    [ApiVersion("1.0")]
     public class CoursesController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -30,11 +28,13 @@ namespace LearnHubBackendDotNet.Controllers
         }
 
         //GET: api/Courses
-       [HttpGet]
-        public async Task<ActionResult<IEnumerable<CourseDetailsDto>>> GetCourses()
+
+        [HttpGet]
+        [MapToApiVersion("1.0")]
+        public async Task<ActionResult<IEnumerable<CourseDetailsDto>>> GetCoursesV1()
         {
 
-            //_logger.LogInformation("Fetching all courses from db");
+            _logger.LogInformation("Fetching all courses from db");
             if (_context.Courses == null)
             {
                 return NotFound();
@@ -54,31 +54,6 @@ namespace LearnHubBackendDotNet.Controllers
             }).ToListAsync();
         }
         #region API Versioning
-
-        //[HttpGet]
-        //[MapToApiVersion("1.0")]
-        //public async Task<ActionResult<IEnumerable<CourseDetailsDto>>> GetCoursesV1()
-        //{
-
-        //  _logger.LogInformation("Fetching all courses from db");
-        //  if (_context.Courses == null)
-        //  {
-        //      return NotFound();
-
-        //  }
-        //    return await _context.Courses.Select(C=>new CourseDetailsDto
-        //    {
-        //        id = C.Id,
-        //        AuthorEmail = C.Email,
-        //        author = C.author,
-        //        category = C.category,
-        //        image = C.image,
-        //        courseName = C.name,
-        //        price = C.price,
-        //        rating = C.rating,
-        //        students = C.students
-        //    }).ToListAsync();
-        //}
 
         //[HttpGet]
         //[MapToApiVersion("2.0")]
@@ -103,6 +78,7 @@ namespace LearnHubBackendDotNet.Controllers
 
         // GET: api/Courses/Category
         [HttpGet("Category")]
+        [MapToApiVersion("1.0")]
         public async Task<ActionResult<IEnumerable<CourseDetailsDto>>> GetCoursesByCategory([FromHeader(Name ="Category")] string Category)
         {   
             if (string.IsNullOrEmpty(Category))
@@ -127,6 +103,7 @@ namespace LearnHubBackendDotNet.Controllers
 
         // GET: api/Courses/Author
         [HttpGet("Author")]
+        [MapToApiVersion("1.0")]
         public async Task<ActionResult<IEnumerable<CourseDetailsDto>>> GetCoursesByAuthor([FromHeader(Name = "Author")] string Author)
         {
             if (string.IsNullOrEmpty(Author))
@@ -152,6 +129,7 @@ namespace LearnHubBackendDotNet.Controllers
 
         // GET: api/Courses/5
         [HttpGet("{id}")]
+        [MapToApiVersion("1.0")]
         public async Task<ActionResult<Course>> GetCourse(int id)
         {
           if (_context.Courses == null)
@@ -171,6 +149,7 @@ namespace LearnHubBackendDotNet.Controllers
         // PUT: api/Courses/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [MapToApiVersion("1.0")]
         public async Task<IActionResult> PutCourse(int id, Course course)
         {
             if (id != course.Id)
@@ -202,6 +181,7 @@ namespace LearnHubBackendDotNet.Controllers
         // POST: api/Courses
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [MapToApiVersion("1.0")]
         public async Task<ActionResult<Course>> PostCourse(Course course)
         {
           if (_context.Courses == null)
@@ -218,6 +198,7 @@ namespace LearnHubBackendDotNet.Controllers
 
         // DELETE: api/Courses/5
         [HttpDelete("{id}")]
+        [MapToApiVersion("1.0")]
         public async Task<IActionResult> DeleteCourse(int id)
         {
             if (_context.Courses == null)

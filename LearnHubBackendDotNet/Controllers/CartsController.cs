@@ -12,8 +12,9 @@ using LearnHubBackendDotNet.Exceptions;
 
 namespace LearnHubBackendDotNet.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
+    [ApiVersion("1.0")]
     public class CartsController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -25,6 +26,7 @@ namespace LearnHubBackendDotNet.Controllers
 
         //Get cart items data using UserId  GET: api/Carts/5/added
         [HttpGet("{userId}/{status}")]
+        [MapToApiVersion("1.0")]
         public async Task<ActionResult<IEnumerable<Cart>>> GetCartItems(int userId,string status)
         {
           if (_context.CartItems == null)
@@ -40,6 +42,7 @@ namespace LearnHubBackendDotNet.Controllers
         // PUT: api/Carts/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPatch("{id}/status")]
+        [MapToApiVersion("1.0")]
         public async Task<IActionResult> UpdateCartStatus(int id,[FromBody] CartStatusUpdateRequestDto dto)
         {            
             try
@@ -74,6 +77,7 @@ namespace LearnHubBackendDotNet.Controllers
         // POST: api/Carts
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [MapToApiVersion("1.0")]
         public async Task<ActionResult<Cart>> PostCart(Cart cart)
         {
           if (_context.CartItems == null)
@@ -98,6 +102,7 @@ namespace LearnHubBackendDotNet.Controllers
 
         // DELETE: api/Carts/5
         [HttpDelete("{id}")]
+        [MapToApiVersion("1.0")]
         public async Task<IActionResult> DeleteCart(int id)
         {
             if (_context.CartItems == null)

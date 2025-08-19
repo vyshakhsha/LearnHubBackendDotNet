@@ -8,8 +8,9 @@ using Microsoft.AspNetCore.Identity;
 
 namespace LearnHubBackendDotNet.Controllers
 {
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
-    [Route("api/users")]
+    [ApiVersion("1.0")]
     public class UsersController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -21,12 +22,14 @@ namespace LearnHubBackendDotNet.Controllers
         }
 
         [HttpGet]
+        [MapToApiVersion("1.0")]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
             return await _context.Users.ToListAsync();
         }
 
         [HttpGet("{id}")]
+        [MapToApiVersion("1.0")]
         public async Task<ActionResult<User>> GetUser(int id)
         {
             var user = await _context.Users.FindAsync(id);
@@ -38,6 +41,7 @@ namespace LearnHubBackendDotNet.Controllers
         }
 
         [HttpPost]
+        [MapToApiVersion("1.0")]
         public async Task<ActionResult<User>> CreateUser(RegisterRequest request)
         {
 
@@ -79,6 +83,7 @@ namespace LearnHubBackendDotNet.Controllers
         }
 
         [HttpPut("{id}")]
+        [MapToApiVersion("1.0")]
         public async Task<IActionResult> UpdateUser(int id, User user)
         {
             if (id != user.Id)
@@ -108,6 +113,7 @@ namespace LearnHubBackendDotNet.Controllers
         }
 
         [HttpDelete("{id}")]
+        [MapToApiVersion("1.0")]
         public async Task<IActionResult> DeleteUser(int id)
         {
             var user = await _context.Users.FindAsync(id);
@@ -123,6 +129,7 @@ namespace LearnHubBackendDotNet.Controllers
         }
 
         [HttpPost("login")]
+        [MapToApiVersion("1.0")]
         public async Task<IActionResult> Login(LoginRequest request)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
